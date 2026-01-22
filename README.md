@@ -1,2 +1,4 @@
 # FinalHW-E2
-Excersise 2 for the cumulative HW
+Excercise 2 for the Cumulative Final HW
+
+Here is the page: https://funtamendalsredwan.github.io/FinalHW-E2/
