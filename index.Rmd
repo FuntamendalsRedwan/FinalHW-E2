@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+#clear all variables
+rm(list = ls())
+
+# load libraries
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(stringr)
+```
+
+# Load the data
+
+```{r}
+# address where data is
+url <- "https://github.com/FuntamendalsRedwan/FinalHW-E2/raw/refs/heads/main/HDR25_Statistical_Annex_HDI_Table.xlsx"
+
+#make a temp files to store the excel
+tf <- tempfile(fileext = ".xlsx")
+download.file(url, tf, mode="wb")
+
+# load the temp file with read_excel
+raw_data <- read_excel(tf, skip = 4)
+```
+```{r}
+# innital look at the data
+str(raw_data)
+```
+
+# Filter the data
+
+```{r}
+#clean the data
+hdi_cleaned <- raw_data %>%
+# first grab the columns we want
+  select(
+    country = 2,
+    life_expectancy = 5,
+    expected_schooling = 7,
+    mean_schooling = 9,
+    gni_per_capita = 11
+  ) %>%
+  # drop empty rows
+  drop_na() %>%
+  # take the first row off as it was the units
+  slice(-1) %>%
+  # turn the data into numeric
+  mutate(across(c(life_expectancy, expected_schooling, mean_schooling, gni_per_capita), 
+                as.numeric)) %>%
+  drop_na()
+
+# look at the cleaned data
+str(hdi_cleaned)
+```
+
+# Take the mean of the data
+
+```{r}
+# use summarise to take and show the mean of each column
+hdi_cleaned %>% summarise(
+    Mean_Life_Expectancy = mean(life_expectancy),
+    Mean_Expected_Schooling = mean(expected_schooling),
+    Mean_Years_Schooling = mean(mean_schooling),
+    Mean_GNI_per_Capita = mean(gni_per_capita)
+  )
+```
+
